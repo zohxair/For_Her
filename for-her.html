@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Muniba ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI', sans-serif;
+  background:#120000;
+  color:white;
+  overflow-x:hidden;
+}
+.hearts{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background-image:radial-gradient(circle, rgba(255,60,90,0.2) 2px, transparent 3px);
+  background-size:60px 60px;
+  z-index:-1;
+}
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:30px;
+}
+.card{
+  background:rgba(90,0,0,0.75);
+  padding:25px;
+  border-radius:22px;
+  margin-bottom:35px;
+  box-shadow:0 0 25px rgba(255,50,80,0.35);
+}
+h1,h2{
+  text-align:center;
+  color:#ff4d6d;
+}
+.center{text-align:center;}
+.tabs{
+  display:flex;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+.tab-button{
+  padding:10px 16px;
+  background:#ff4d6d;
+  border:none;
+  border-radius:10px;
+  margin:3px;
+  cursor:pointer;
+  color:white;
+}
+.tab-button:hover{background:#ff1f4a;}
+.tab-content{
+  display:none;
+  margin-top:15px;
+  padding:15px;
+  background:rgba(255,0,80,0.1);
+  border-radius:12px;
+}
+canvas{
+  display:block;
+  margin:20px auto;
+  border:3px solid #ff4d6d;
+  border-radius:15px;
+}
+input{
+  background:#300000;
+  border:1px solid #ff4d6d;
+  color:white;
+  padding:8px 12px;
+  border-radius:10px;
+}
+button{
+  padding:8px 14px;
+  border-radius:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="hearts"></div>
+
+<div class="container">
+
+  <!-- Title -->
+  <div class="card">
+    <h1>For Muniba ❤️</h1>
+    <p class="center">From Zohair, with all my heart❤️.<br>Project: 22 Dec 2025 → 16 Feb 2026</p>
+  </div>
+
+  <!-- Countdowns -->
+  <div class="card">
+    <h2>Countdowns ⏳</h2>
+    <ul>
+      <li>📖Her Boards: <span id="herBoards"></span></li>
+      <li>📚My Boards: <span id="myBoards"></span></li>
+      <li>🍰Zohair Birthday: <span id="zBD"></span></li>
+      <li>🎂Muniba Birthday: <span id="mBD"></span></li>
+    </ul>
+  </div>
+
+  <!-- Messages -->
+  <div class="card">
+    <h2>Messages 💌</h2>
+    <div class="tabs">
+      <button class="tab-button" onclick="showMessage('miss')">When You Miss Me</button>
+      <button class="tab-button" onclick="showMessage('sad')">When You're Sad</button>
+      <button class="tab-button" onclick="showMessage('insecure')">When Insecure</button>
+      <button class="tab-button" onclick="showMessage('sleep')">When You Can't Sleep</button>
+    </div>
+    <div id="messageBox" class="tab-content">
+      <p id="messageText"></p>
+    </div>
+  </div>
+
+  <!-- Playlist -->
+  <div class="card center">
+    <h2>For my LOVE 🎵</h2>
+    <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2KMTHva3qgQGbhMBuZuC2B?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>" 
+  </div>
+
+  <!-- Games -->
+  <div class="card">
+    <h2>Games 🎮</h2>
+    <div class="tabs">
+      <button class="tab-button" onclick="openGame('heartGame')">Heart Game</button>
+      <button class="tab-button" onclick="openGame('bounceGame')">Bounce Ball</button>
+      <button class="tab-button" onclick="openGame('runnerGame')">Endless Runner</button>
+      <button class="tab-button" onclick="openGame('mathGame')">Math Challenge</button>
+      <button class="tab-button" onclick="openGame('reactionGame')">Reaction Game</button>
+    </div>
+
+    <!-- HEART GAME -->
+    <div id="heartGame" class="tab-content">
+      <canvas id="heartCanvas" width="360" height="420"></canvas>
+      <p class="center">
+        Score: <span id="heartScore">0</span><br>
+        High Score: <span id="heartHigh">0</span>
+      </p>
+    </div>
+
+    <!-- BOUNCE BALL -->
+    <div id="bounceGame" class="tab-content">
+      <canvas id="bounceCanvas" width="360" height="420"></canvas>
+      <p class="center">Score: <span id="bounceScore">0</span></p>
+    </div>
+
+    <!-- RUNNER -->
+    <div id="runnerGame" class="tab-content">
+      <canvas id="runnerCanvas" width="360" height="150"></canvas>
+      <p class="center">Distance: <span id="runnerScore">0</span></p>
+    </div>
+
+    <!-- MATH -->
+    <div id="mathGame" class="tab-content">
+      <p class="center">Solve: <span id="mathProblem"></span></p>
+      <input type="text" id="mathAnswer">
+      <button onclick="checkMath()">Submit</button>
+      <p class="center">Score: <span id="mathScore">0</span></p>
+    </div>
+
+    <!-- REACTION -->
+    <div id="reactionGame" class="tab-content">
+      <button id="reactionBtn" onclick="startReaction()">Start</button>
+      <p class="center">Time: <span id="reactionTime">0</span> ms</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ================= COUNTDOWNS =================
+function countdown(id,date){
+  const diff=date-Date.now();
+  if(diff<=0){
+    document.getElementById(id).innerText="Done ❤️";
+    return;
+  }
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  document.getElementById(id).innerText=d+"d "+h+"h "+m+"m";
+}
+setInterval(()=>{
+  countdown("herBoards",new Date("March 6, 2026"));
+  countdown("myBoards",new Date("June 3, 2026"));
+  countdown("zBD",new Date("April 22, 2026"));
+  countdown("mBD",new Date("February 11, 2027"));
+},1000);
+
+// ================= MESSAGES =================
+const messages={
+  miss:[
+    "Thinking of you makes me smile ❤️",
+    "Miss you so much, my love 🥰",
+    "Even far away, you're my heart 💌",
+    "Replay our memories with me 🌸",
+    "You’re my favorite thought today 🫶"
+  ],
+  sad:[
+    "I’m here even when you feel low 💕",
+    "You don’t need to be strong 🫂",
+    "Your feelings are valid 💖",
+    "Lean on me, I’m not going anywhere 🤍",
+    "You’re amazing, even on sad days 🌹"
+  ],
+  insecure:[
+    "You’re perfect to me 💗",
+    "Your heart is safe with me ❤️",
+    "I love you exactly as you are 🥰",
+    "Never doubt yourself 🌸",
+    "I’m proud of you always 💕"
+  ],
+  sleep:[
+    "Close your eyes, I’m with you 🌙",
+    "Sweet dreams, my love 🥰",
+    "Imagine my hug around you 🤗",
+    "Rest easy, tomorrow is brighter 💖",
+    "Sleep tight, my favorite person 🫶"
+  ]
+};
+function showMessage(type){
+  document.getElementById("messageBox").style.display="block";
+  const arr=messages[type];
+  const msg=arr[Math.floor(Math.random()*arr.length)];
+  document.getElementById("messageText").innerText=msg;
+}
+
+// ================= GAME TABS =================
+function openGame(id){
+  document.querySelectorAll("#heartGame,#bounceGame,#runnerGame,#mathGame,#reactionGame")
+  .forEach(el=>el.style.display="none");
+  document.getElementById(id).style.display="block";
+}
+
+// ================= HEART GAME =================
+const heartCanvas=document.getElementById("heartCanvas");
+const hctx=heartCanvas.getContext("2d");
+let heart={x:180,y:100,vx:3,vy:0,r:18};
+let paddle={x:130,w:100};
+let gravity=0.5,heartScore=0;
+let heartHigh=localStorage.getItem("heartHigh")||0;
+document.getElementById("heartHigh").innerText=heartHigh;
+heartCanvas.addEventListener("mousemove",e=>{
+  paddle.x=e.clientX-heartCanvas.getBoundingClientRect().left-50;
+});
+function loopHeart(){
+  hctx.clearRect(0,0,360,420);
+  heart.vy+=gravity; heart.x+=heart.vx; heart.y+=heart.vy;
+  if(heart.x<18||heart.x>342) heart.vx*=-1;
+  if(heart.y<18) heart.vy*=-1;
+  if(heart.y+18>390 && heart.x>paddle.x && heart.x<paddle.x+100){
+    heart.vy=-10; heartScore++;
+  }
+  if(heart.y>420){
+    if(heartScore>heartHigh){
+      heartHigh=heartScore;
+      localStorage.setItem("heartHigh",heartHigh);
+      document.getElementById("heartHigh").innerText=heartHigh;
+    }
+    heartScore=0; heart.y=100;
+  }
+  document.getElementById("heartScore").innerText=heartScore;
+  hctx.font="30px Arial"; hctx.fillText("❤️",heart.x-15,heart.y+10);
+  hctx.fillRect(paddle.x,390,100,10);
+  requestAnimationFrame(loopHeart);
+}
+loopHeart();
+
+// ================= BOUNCE BALL =================
+const bounceCanvas = document.getElementById("bounceCanvas");
+const bctx = bounceCanvas.getContext("2d");
+let ball = { x: 180, y: 200, vx: 4, vy: 4, r: 10 };
+let bouncePaddle = { x: 130, w: 100, h: 10 };
+let bounceScore = 0;
+bounceCanvas.addEventListener("mousemove", e => {
+  bouncePaddle.x = e.clientX - bounceCanvas.getBoundingClientRect().left - bouncePaddle.w / 2;
+  if (bouncePaddle.x < 0) bouncePaddle.x = 0;
+  if (bouncePaddle.x + bouncePaddle.w > bounceCanvas.width) bouncePaddle.x = bounceCanvas.width - bouncePaddle.w;
+});
+function loopBounce() {
+  bctx.clearRect(0, 0, bounceCanvas.width, bounceCanvas.height);
+  ball.x += ball.vx; ball.y += ball.vy;
+  if (ball.x - ball.r < 0 || ball.x + ball.r > bounceCanvas.width) ball.vx *= -1;
+  if (ball.y - ball.r < 0) ball.vy *= -1;
+  if (ball.y + ball.r >= bounceCanvas.height - bouncePaddle.h &&
+      ball.x >= bouncePaddle.x && ball.x <= bouncePaddle.x + bouncePaddle.w) {
+    ball.vy *= -1;
+    ball.y = bounceCanvas.height - bouncePaddle.h - ball.r;
+    bounceScore++;
+  // Increase speed slightly every bounce
+  ball.vx *= 1.05; // increase horizontal speed by 5%
+  ball.vy *= 1.05; // increase vertical speed by 5%
+
+  }
+  if (ball.y - ball.r > bounceCanvas.height) {
+    bounceScore = 0; ball.x = 180; ball.y = 200; ball.vx = 4; ball.vy = 4;
+  }
+  bctx.beginPath();
+  bctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+  bctx.fillStyle = "#ff4d6d"; bctx.fill(); bctx.closePath();
+  bctx.fillStyle = "#ff4d6d";
+  bctx.fillRect(bouncePaddle.x, bounceCanvas.height - bouncePaddle.h, bouncePaddle.w, bouncePaddle.h);
+  document.getElementById("bounceScore").innerText = bounceScore;
+  requestAnimationFrame(loopBounce);
+}
+loopBounce();
+
+// ================= RUNNER =================
+const runnerCanvas=document.getElementById("runnerCanvas");
+const rctx=runnerCanvas.getContext("2d");
+let runner={y:100,vy:0},obstacles=[],runnerScore=0;
+document.addEventListener("keydown",e=>{if(e.code==="Space"&&runner.y>=100) runner.vy=-10;});
+function loopRunner(){
+  rctx.fillStyle="#ffe6f0"; rctx.fillRect(0,0,360,150);
+  rctx.fillStyle="#ccc"; rctx.fillRect(0,120,360,30);
+  runner.vy+=0.5; runner.y+=runner.vy;
+  if(runner.y>100){runner.y=100; runner.vy=0;}
+  rctx.fillStyle="#ff4d6d"; rctx.fillRect(50,runner.y,20,20);
+  if(Math.random()<0.02) obstacles.push({x:360});
+  obstacles.forEach((o,i)=>{
+    o.x-=4; rctx.fillRect(o.x,100,20,20);
+    if(o.x<70 && o.x>40 && runner.y>80){obstacles=[]; runnerScore=0;}
+    if(o.x<-20){obstacles.splice(i,1); runnerScore++;}
+  });
+  document.getElementById("runnerScore").innerText=runnerScore;
+  requestAnimationFrame(loopRunner);
+}
+loopRunner();
+
+// ================= MATH =================
+let mathScore=0,currentAnswer;
+function newProblem(){
+  let a=Math.floor(Math.random()*10),b=Math.floor(Math.random()*10);
+  currentAnswer=a+b;
+  document.getElementById("mathProblem").innerText=a+" + "+b;
+}
+function checkMath(){
+  let val=parseInt(document.getElementById("mathAnswer").value);
+  if(val===currentAnswer) mathScore++; else mathScore=0;
+  document.getElementById("mathScore").innerText=mathScore;
+  document.getElementById("mathAnswer").value="";
+  newProblem();
+}
+newProblem();
+
+// ================= REACTION =================
+let reactionStart;
+function startReaction(){
+  const btn=document.getElementById("reactionBtn");
+  btn.innerText="Wait..."; btn.style.background="red";
+  setTimeout(()=>{
+    btn.innerText="CLICK!"; btn.style.background="green"; reactionStart=Date.now();
+    btn.onclick=stopReaction;
+  },Math.random()*3000+2000);
+}
+function stopReaction(){
+  const time=Date.now()-reactionStart;
+  document.getElementById("reactionTime").innerText=time;
+  const btn=document.getElementById("reactionBtn");
+  btn.innerText="Start"; btn.style.background="#ff4d6d"; btn.onclick=startReaction;
+}
+</script>
+
+</body>
+</html>
